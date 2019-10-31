@@ -1,0 +1,63 @@
+# extract packet from wireless to file
+tshark -i wlp3s0 -w capture-output.pcap
+
+# extract packet from file
+tshark -r capture-output.pcap
+
+# select frame 10
+tshark -r test 'frame.number==10'
+
+# Set the format of the output
+-T  ek|fields|json|pdml|ps|psml|text
+
+# show specific field add:
+-T fields -e http.host -e http.user_agent
+
+# show packet matching display filter add:
+-Y http.request and ip.dest==128.119.245.12"
+
+
+# detail view of a specific protocol
+-O tcp
+
+# detail view of all packet details
+-V
+
+# set json output and -j filter
+tshark -T json -j "http tcp ip" -x -r capture-output.pcap
+
+# custmoized filter && stdout
+tshark -i wlan0 -Y 'http.request.method == POST and tcp contains "password"' | grep password
+
+# some protocols, for all protocol: tshark -G protocols
+Frame	Frame	frame
+Ethernet	Ethernet	eth
+Internet Protocol Version 4	IPv4	ip
+Internet Protocol Version 6	IPv6	ipv6
+Transmission Control Protocol	TCP	tcp
+Hypertext Transfer Protocol	HTTP	http
+HyperText Transfer Protocol 2	HTTP2	http2
+
+# to filter away everything that isn't TCP or has no TCP payload.
+tcp and tcp.len!=0
+
+tshark -r capture-output3.pcap -Y '(http or tcp and tcp.len!=0) and frame.number>=10 && frame.number <=16' -O http
+
+# summary stattistics
+tshark -r input.cap.pcapng -q -z conv,ip > output.txt
+tshark -r input.cap.pcapng -q -z conv,tcp > output.txt
+tshark -r input.cap.pcapng -q -z conv,udp > output.txt
+
+# time-seq data
+tshark -r tcp-ethereal-trace-1 -Y "tcp and not tcp.len==0" -T fields -e frame.time_relative -e tcp.seq
+
+# grep filter
+grep -i "frame\|window\|MSS"
+#invert filter
+grep -v "iRTT"
+
+#retrasnmission filter
+ -Y "tcp.analysis.retransmission or tcp.analysis.fast_retransmission or tcp.analysis.zero_window"
+
+# filter icmp and B is ICMP type 11 (TTL expired) include ip fragments
+-Y !(icmp[0]==B) and ip.src=192.168.1.102 and ip.flags.df == 0

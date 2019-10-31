@@ -1,0 +1,6 @@
+				<p>I have always been fascinated by math and science and later decided to
+				pursue mechanical engineering at Drexel University.
+				After I received my bachelor and master degrees, I was fortunate to work at
+				Hewlett-Packard and learn about the world of manufacturing and design. 
+				Now, I'm working on my computer science degree and reading books 
+				on Linux kernel, algorithm, and Scheme.<p>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content={{this.desc}}>
+<meta name="keywords" content={{this.tags}}>
+<meta name="author" content="Chewie Lin">
+<title>Chewie Lin</title>
+
+<link rel="stylesheet" href="css/pure-min.css">
+<link rel="stylesheet" href="css/grids-responsive-min.css">
+<link rel="stylesheet" href="css/font-awesome.css">
+<link rel="stylesheet" href="css/marketing.css">
+<script src={{this.script}}></script>
+</head>
+
+<body>
+<div class="header">
+	<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+		<a class="pure-menu-heading" href="">Chewie Lin</a>
+		<ul class="pure-menu-list">
+			<li class="pure-menu-item pure-menu-selected"><a href="https://chewie-lin.me/" class="pure-menu-link">Home</a></li>
+			<li class="pure-menu-item"><a href="https://chewie-lin.me/blog" class="pure-menu-link">Blog</a></li>
+			<li class="pure-menu-item"><a href="https://chewie-lin.me/projects" class="pure-menu-link">Projects</a></li> 
+			<li class="pure-menu-item"><a href="https://chewie-lin.me/contact" class="pure-menu-link">Contact</a></li> 
+		</ul>
+	</div>
+</div>
+
+<div class="splash-container">
+	<div class="pure-g">
+		<div class="is-center pure-u-1">
+			<!--<img class="pure-img-responsive" alt="fractal" src="circle.jpg">-->
+			<canvas id="tessellactation" width="600" height="300"> </canvas>
+		</div>
+	</div>
+</div>
+
+<div class="content-wrapper content-scroll">
+
+  <div class="splash-content l-box-lrg pure-g">
+      <div class="pure-u-1 pure-u-md-1-1 pure-u-lg-1-1">
+				{{{this.comic}}}
+        <h2 class="content-head content-head-ribbon">About Me</h2>
+				{{{this.body}}}
+				<!--
+				<p id="intro"> 
+				Math can be difficult but it can also be fun. 
+				I think of it like a tool in a toolbox and I can't help but appreciate
+				how amazing it is when I need something to solve a statistic problem. 
+
+				There is now an API (work in progress) for this site. https://api.chewie-lin.me/
+				<p>
+				-->
+				<p>
+      </div>
+  </div>
+	
+	<div class="ribbon l-box-lrg pure-g">
+		<div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+			<img class="pure-img-responsive" alt="File Icons" width="300" src="rain-season.jpg">
+		</div>
+		<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+			<h2 class="content-head content-head-ribbon">Peace to the World</h2> 
+			<p> {{this.Peace2Dworld}}
+			<p> {{this.quote}}
+			<!--
+			<p> I like photography for the composition and the symmetry of 
+			elements. There is a sense of order in the chaos we see. 
+			This photo was taken during winter months along the Oregon coast. 
+			</p>
+			<p> Much that once was is lost,
+			          for none now live who remember it. - LOTR</p>
+								-->
+		</div>
+	</div>
+	<div class="footer l-box is-center">2017 Oregon State</div>
+</div>
+
+</body>
+</html>

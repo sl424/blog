@@ -1,0 +1,144 @@
+
+{{{
+  "title" : "android",
+  "tags" : ["android", "ant", "gradle", "maven", "java"],
+  "desc" : "android development",
+  "category" : "android",
+  "date" : "02 April 2018",
+  "arbitrary" : "arbitrary content"
+}}}
+
+
+[Ant]: https://ant.apache.org/ "Ant"
+[Gradle]: https://gradle.org/ "Gradle"
+[Maven]: https://maven.apache.org/ "Maven"
+[JUnit]: https://blog.chewie-lin.me/junit-debugging "Junit Debugging"
+
+Reference:
+
++ [Ant](http://www.linux-mag.com/id/7667/)
++ [EQDN](http://eqdn.tech/android-development-on-the-command-line/)
+
+# Android Build #
+---
+
+## Choose Your Poison ##
+
+The easiest way to develop Android application is to use Android Studio. 
+So this is about how to manually use different build system.
+
+I know 3 different build system for Android:
+
+* [Ant]
+* [Gradle]
+* [Maven]
+
+These are general purpose Java build systems that can be adopted to help you build Android. I believe Android Studio uses Gradle. 
+
+## Android SDK ##
+
+If you are not going to use Android Studio, you have to get the android sdk components.
+
+* Android SDK and related packages.
+* Android Debub Bridge(adb) part of android studio project. 
+
+Getting these components on your system might be difficult, best to consult with your distribution.
+
+## My Build Script ##
+Below is my build script for building android application using Gradle.
+You might run into problems with setting up create project because of 
+dependencies and out-of-date settings. The other tough one might be debug
+depending on your build system. Check out [JUnit]. 
+
+	#! /usr/bin/sh
+
+	cmd=$1
+	device="-s emulator-5554"
+	dev_name="newpc"
+	#device="-s 20080411"
+	name="oauth"
+	pkg="com.android.oauth"
+	activity="mainActivity"
+	path="oauth"
+	pkg_file="./build/outputs/apk/"$path"-debug.apk"
+	src_path="./src"
+	debug_port=8700
+
+	# android list targets
+	platform="android-25"
+
+	if [ $cmd = "create" ]; then
+		android create project \
+			--target $platform \
+			--name $name \
+			--path $path \
+			--activity $activity \
+			--package $pkg \
+			--gradle \
+			--gradle-version 2.1.3 #plugin version
+
+		#change version accordingly
+		#Plugin version Required Gradle version
+		#1.0.0 - 1.1.3  2.2.1 - 2.3
+		#1.2.0 - 1.3.1  2.2.1 - 2.9
+		#1.5.0          2.2.1 - 2.13
+		#2.0.0 - 2.1.2  2.10 - 2.13
+		#2.1.3+         2.14.1+
+
+		sed -i 's/runProguard false/minifyEnabled true/' \
+						$path/build.gradle
+		sed -i 's/android {/android { defaultConfig { minSdkVersion 16}/' \
+						$path/build.gradle
+		sed -i 's/gradle-1.12-all.zip/gradle-2.14.1-all.zip/' \
+						$path/gradle/wrapper/gradle-wrapper.properties
+		cp script.sh $path/emulator.sh
+
+		cat > $path/src/main/res/values/styles.xml << "EOF"
+		<resources>
+		<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+		</style>
+		</resources>
+	EOF
+		cat >> $path/build.gradle << "EOF"
+		dependencies {
+		compile 'com.android.support:appcompat-v7:25.2.0'
+	}
+	EOF
+
+	elif [ $cmd = 'start' ]; then
+		emulator -use-system-libs -avd $dev_name -no-boot-anim -scale 1.50 -show-kernel
+
+	elif [ $cmd = "build" ]; then
+		sh gradlew build
+
+	elif [ $cmd = "clean" ]; then
+		sh gradlew clean
+
+	elif [ $cmd = "install" ]; then
+		adb install $pkg_file
+
+	elif [ $cmd = "reinstall" ]; then
+		adb install -r $pkg_file
+
+	elif [ $cmd = "run" ]; then
+		string="am start -n $pkg/.$activity"
+		adb shell $string
+
+	elif [ $cmd = "stop" ]; then
+		string="am force-stop $pkg"
+		adb shell $string
+
+	elif [ $cmd = "debug" ]; then
+		string="am start -D -n $pkg/.$activity"
+		adb shell $string
+		sleep 1
+		#APP_PORT=$(adb jdwp | tail -1)
+		APP_PORT=$(adb shell ps | grep $pkg | cut -d ' ' -f 4)
+		adb forward tcp:$debug_port jdwp:$APP_PORT
+		jdb -attach localhost:$debug_port -sourcepath $src_path
+
+	elif [ $cmd = "uninstall" ]; then
+		adb uninstall $pkg
+
+	elif [ $cmd = "logcat" ]; then
+		adb logcat
