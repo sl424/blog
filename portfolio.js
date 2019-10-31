@@ -1,22 +1,43 @@
-//var u_port = "8080"
-var u_port = "80"
-//var s_port = "8443"
-var s_port = "443"
+var u_port = "8080"
+var s_port = "8443"
+
+const https = require('https');
+const fs = require('fs');
 
 var express = require('express');
 var app = express();
 var request = require('request');
-var handlebars = require('express-handlebars').create({defaultlayout:'main'});
+//var handlebars = require('express-handlebars').create({defaultlayout:'index'});
+var handlebars = require('express-handlebars');
 
 var parseString = require('xml2js').parseString;
 var xml = '';
-var url = "https://feed43.com/calvin-hobbes-spanish.xml"
 
+/*************************
+// letsencrypt
+ *********************/
+//encrypted channel
+//fs = require('fs')
+const options = {
+	    cert: fs.readFileSync('./ssl/fullchain.pem'), 
+	    key: fs.readFileSync('./ssl/privkey.pem')
+};
+function requireHTTPS(req, res, next) {
+    if (!req.secure) {
+        //FYI this should work for local development as well
+        return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+}
+https.createServer(options, app).listen(s_port);
 app.use(requireHTTPS);
+
+
 app.use(require('helmet')());
 
 var bodyParser = require('body-parser');
-app.engine('handlebars',handlebars.engine);
+//app.engine('handlebars',handlebars.engine);
+app.engine('handlebars', handlebars({extname: '.handlebars', defaultLayout: false}));
 app.set('view engine', 'handlebars');
 app.set('port', u_port);
 //var pass = "123";
@@ -29,7 +50,7 @@ var router = express.Router();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-var key = require('./credential.js');
+//var key = require('./credential.js');
 
 var mysql = require('./connection.js');
 
@@ -48,27 +69,6 @@ jsonFm = require('json-front-matter').parse
 var Poet = require('poet');
 var markdown = require( "markdown" ).markdown;
 
-/*************************
-// letsencrypt
- *********************/
-//encrypted channel
-//fs = require('fs')
-const https = require('https');
-const fs = require('fs');
-const options = {
-	    cert: fs.readFileSync('./ssl/fullchain.pem'), 
-	    key: fs.readFileSync('./ssl/privkey.pem')
-};
-
-function requireHTTPS(req, res, next) {
-    if (!req.secure) {
-        //FYI this should work for local development as well
-        return res.redirect('https://' + req.get('host') + req.url);
-    }
-    next();
-}
-
-https.createServer(options, app).listen(s_port);
 
 
 /*************************
@@ -100,6 +100,7 @@ function htmlTourl(url, callback) {
 /*************************
 //slides specific routes 
  *********************/
+/*
 slides.get('/', function (req, res) {
 	var file = './slides/index.html';
 	fs.readFile(file, 'utf8', function (err,data) {
@@ -115,6 +116,7 @@ slides.get('/:slide', function (req, res) {
 		res.send(data);
 	});
 });
+*/
 
 
 /*************************

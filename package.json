@@ -11,15 +11,19 @@
   "dependencies": {
     "body-parser": "^1.13.3",
     "connect-rest": "^2.11.8",
-    "express": "^4.15.2",
-    "express-handlebars": "^3.0.0",
-    "express-session": "^1.11.3",
-    "express-subdomain": "^1.0.5",
+    "express": "latest",
+    "express-handlebars": "latest",
+    "express-session": "latest",
+    "express-subdomain": "latest",
     "helmet": "^3.6.1",
     "markdown": "^0.5.0",
     "mysql": "^2.8.0",
     "poet": "^2.0.2",
     "request": "^2.72.0",
-    "vhost": "^3.0.2"
+    "vhost": "^3.0.2",
+"xml2js": "latest",
+"json-front-matter": "latest",
+"fs": "latest",
+"https":"latest"
   }
 }

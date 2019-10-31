@@ -1,0 +1,42 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "personal webiste and portfolio",
+  "main": "portfolio.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "OSU",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "connect-rest": "^2.11.8",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.11.3",
+    "express-subdomain": "^1.0.5",
+    "helmet": "^3.6.1",
+    "markdown": "^0.5.0",
+    "mysql": "^2.8.0",
+    "poet": "^2.0.2",
+    "request": "^2.72.0",
+    "vhost": "^3.0.2"
+  }
+}
+var express = require('express');
+var request = require('request');
+var handlebars = require('express-handlebars').create({defaultlayout:'main'});
+var parseString = require('xml2js').parseString;
+app.use(requireHTTPS);
+app.use(require('helmet')());
+var bodyParser = require('body-parser');
+var subdomain = require('express-subdomain');
+var key = require('./credential.js');
+var mysql = require('./connection.js');
+jsonFm = require('json-front-matter').parse
+var Poet = require('poet');
+var markdown = require( "markdown" ).markdown;
+//fs = require('fs')
+const https = require('https');
+const fs = require('fs');
+function requireHTTPS(req, res, next) {
